@@ -50,14 +50,43 @@ public abstract class Critter {
 	private int x_coord;
 	private int y_coord;
 	
+	/* Unknown purpose
+	private final int travelX(int distanceToTravel) {
+		//boundary condition
+			if(this.x_coord+distanceToTravel>Params.world_width-1) {
+				return Params.world_width-1;
+			}else if(this.x_coord+distanceToTravel<0) {
+				return 1;
+			}
+			else {
+				return this.x_coord+distanceToTravel;
+			}
+			
+	}
+		
+	private final int travelY(int distanceToTravel) {
+			//boundary condition
+			if(this.y_coord+distanceToTravel>Params.world_height-1) {
+				return Params.world_height-1;
+			}else if(this.y_coord+distanceToTravel<0) {
+				return 1;
+			}
+			else {
+				return this.y_coord+distanceToTravel;
+			}	
+	}
+	*/
+	
 	protected final void walk(int direction) {
+		// implement this method
 	}
 	
 	protected final void run(int direction) {
-		
+		// implement this method
 	}
 	
 	protected final void reproduce(Critter offspring, int direction) {
+		// implement this method
 	}
 
 	public abstract void doTimeStep();
@@ -74,7 +103,8 @@ public abstract class Critter {
 	 * @throws InvalidCritterException
 	 */
 	public static void makeCritter(String critter_class_name) throws InvalidCritterException {
-		
+		// implement this method
+		// try catch 
 	}
 	
 	/**
@@ -84,6 +114,8 @@ public abstract class Critter {
 	 * @throws InvalidCritterException
 	 */
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
+		// implement this method
+		// try catch 
 		List<Critter> result = new java.util.ArrayList<Critter>();
 	
 		return result;
@@ -169,14 +201,23 @@ public abstract class Critter {
 	 * Clear the world of all critters, dead and alive
 	 */
 	public static void clearWorld() {
-		// Complete this method.
+		// implement this method
 	}
 	
+	/*	Helper function written by Wenxuan
+	public boolean AliveOrNot() {
+		if(this.energy>0) {
+			return true;
+		}
+		return false;
+	}
+	*/
+	
 	public static void worldTimeStep() {
-		// Complete this method.
+		// implement this method
 	}
 	
 	public static void displayWorld() {
-		// Complete this method.
+		// implement this method
 	}
 }
