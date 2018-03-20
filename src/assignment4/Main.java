@@ -2,14 +2,14 @@ package assignment4;
 /* CRITTERS Main.java
  * EE422C Project 4 submission by
  * Replace <...> with your actual data.
- * <Student1 Name>
- * <Student1 EID>
- * <Student1 5-digit Unique No.>
- * <Student2 Name>
+ * Ronghao Zhang
+ * rz4453
+ * 15505
+ * Wenxuan Wu
  * <Student2 EID>
- * <Student2 5-digit Unique No.>
+ * 15505
  * Slip days used: <0>
- * Fall 2016
+ * Spring 2018
  */
 
 import java.util.Scanner;
