@@ -18,6 +18,6 @@ public class WenCritter2 extends Critter {
 
 	@Override
 	public String toString () {
-		return "7";
+		return "w";
 	}
 }

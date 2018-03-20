@@ -17,6 +17,6 @@ public class RonCritter2 extends Critter {
 
 	@Override
 	public String toString () {
-		return "5";
+		return "r";
 	}
 }
