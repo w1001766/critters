@@ -6,7 +6,7 @@ package assignment4;
  * rz4453
  * 15505
  * Wenxuan Wu
- * <Student2 EID>
+ * ww6726
  * 15505
  * Slip days used: <0>
  * Spring 2018

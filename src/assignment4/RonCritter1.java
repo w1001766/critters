@@ -1,9 +1,10 @@
 package assignment4;
 
-import java.util.*;
+public class RonCritter1 extends Critter {
 
-public class MyCritter1 extends Critter.TestCritter {
-
+	public RonCritter1() {
+		// implement the default constructor
+	}
 	@Override
 	public void doTimeStep() {
 		walk(0);
@@ -16,10 +17,7 @@ public class MyCritter1 extends Critter.TestCritter {
 	}
 	
 	public String toString() {
-		return "1";
+		return "R";
 	}
 	
-	public void test (List<Critter> l) {
-		
-	}
 }

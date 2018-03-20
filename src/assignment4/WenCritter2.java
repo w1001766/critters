@@ -1,8 +1,10 @@
 package assignment4;
 
-import assignment4.Critter.TestCritter;
-
-public class MyCritter6 extends TestCritter {
+public class WenCritter2 extends Critter {
+	
+	public WenCritter2() {
+		// implement the default constructor
+	}
 	
 	@Override
 	public void doTimeStep() {
@@ -10,12 +12,12 @@ public class MyCritter6 extends TestCritter {
 
 	@Override
 	public boolean fight(String opponent) {
-		run(getRandomInt(8));
-		return false;
+
+		return true;
 	}
 
 	@Override
 	public String toString () {
-		return "5";
+		return "7";
 	}
 }

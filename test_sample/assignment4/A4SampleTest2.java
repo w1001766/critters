@@ -77,7 +77,7 @@ public class A4SampleTest2 {
 	 */
 	public void testWalk() throws InvalidCritterException {
 		Critter.makeCritter("MyCritter1");
-		MyCritter1 m1 = (MyCritter1) Critter.TestCritter.getPopulation().get(0);
+		RonCritter1 m1 = (RonCritter1) Critter.TestCritter.getPopulation().get(0);
 		int x1a = m1.getX_coord(); int  y1a = m1.getY_coord();
 		m1.doTimeStep();
 		int x1b = m1.getX_coord(); int  y1b = m1.getY_coord();
@@ -92,7 +92,7 @@ public class A4SampleTest2 {
 	 */
 	public void WalkEnergyTest() throws InvalidCritterException {
 		Critter.makeCritter("MyCritter1");
-		MyCritter1 c = (MyCritter1) Critter.TestCritter.getPopulation().get(0);
+		RonCritter1 c = (RonCritter1) Critter.TestCritter.getPopulation().get(0);
 		int step = 0;
 		int energyUsePerStep = Params.rest_energy_cost + Params.walk_energy_cost;
 		while (c.getEnergy() > 0) {
@@ -116,9 +116,9 @@ public class A4SampleTest2 {
 		int y = 0;
 		int num = 2;
 		Critter.makeCritter("MyCritter6");
-		MyCritter6 runner = (MyCritter6) Critter.getInstances("MyCritter6").get(0);
+		RonCritter2 runner = (RonCritter2) Critter.getInstances("MyCritter6").get(0);
 		Critter.makeCritter("MyCritter7");
-		MyCritter7 fighter = (MyCritter7) Critter.getInstances("MyCritter7").get(0);
+		WenCritter2 fighter = (WenCritter2) Critter.getInstances("MyCritter7").get(0);
 		runner.setX_coord(x);
 		runner.setY_coord(y);
 		fighter.setX_coord(x);
