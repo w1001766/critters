@@ -50,7 +50,12 @@ public abstract class Critter {
 	private int x_coord;
 	private int y_coord;
 	
-	//Create the 2D torus of the game map (wrap to the other side at the edge)
+
+	/**
+	 * Create the 2D torus of the game map (wrap to the other side at the edge)
+	 * @param distanceToTravel
+	 * @return correct x coordinate to go
+	 */
 	private final int travelX(int distanceToTravel) {
 		if(x_coord + distanceToTravel > Params.world_width - 1) {
 			return Params.world_width - 1;
@@ -62,7 +67,12 @@ public abstract class Critter {
 			return x_coord + distanceToTravel;
 		}
 	}
-
+	
+	/**
+	 * Create the 2D torus of the game map (wrap to the other side at the edge)
+	 * @param distanceToTravel
+	 * @return correct y coordinate to go
+	 */
 	private final int travelY(int distanceToTravel) {
 		if(this.y_coord + distanceToTravel > Params.world_height - 1) {
 			return Params.world_height - 1;
@@ -142,8 +152,51 @@ public abstract class Critter {
 		}
 	}
 	
+	/** The reproduce method will initialize the offspring critter
+	 * The offspring has been created in the doTimeStep function and is passed as a parameter
+	 * The offspring has 1/2 of their parent's energy (round factors down)
+	 * Reduce the parent energy to 1/2 (round factors up)
+	 * @param offspring
+	 * @param direction
+	 */
 	protected final void reproduce(Critter offspring, int direction) {
-		// implement this method
+		if(this.energy<Params.min_reproduce_energy) {	// only reproduce if parent has enough energy
+			return;
+		}
+		offspring.energy = (this.energy)/2;	// round down
+		this.energy = (int) Math.ceil((this.energy)/2);	// round up
+		offspring.x_coord = this.x_coord;	// initialize the offspring position
+		offspring.y_coord = this.y_coord;
+		switch (direction) {					// move the offspring
+		case 0: 
+			offspring.x_coord = offspring.travelX(1);
+			break;
+		case 1:
+			offspring.x_coord = offspring.travelX(1);
+			offspring.y_coord = offspring.travelY(-1);
+			break;
+		case 2:
+			offspring.y_coord = offspring.travelY(-1);
+			break;
+		case 3:
+			offspring.x_coord = offspring.travelX(-1);
+			offspring.y_coord = offspring.travelY(-1);
+			break;
+		case 4:
+			offspring.x_coord = offspring.travelX(-1);
+			break;
+		case 5:
+			offspring.x_coord = offspring.travelX(-1);
+			offspring.y_coord = offspring.travelY(1);
+			break;
+		case 6:
+			offspring.y_coord = offspring.travelY(1);
+			break;
+		default:
+			offspring.x_coord = offspring.travelX(1);
+			offspring.y_coord = offspring.travelY(1);
+			break;
+		}
 	}
 
 	public abstract void doTimeStep();
@@ -195,10 +248,25 @@ public abstract class Critter {
 	 * @throws InvalidCritterException
 	 */
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
-		// implement this method
-		// try catch 
+		Class<?> c = null;
+		try {
+			c = Class.forName(critter_class_name);
+		} 
+		catch(ClassNotFoundException e) {
+			throw new InvalidCritterException(critter_class_name);
+		}
+		catch (IllegalArgumentException e) {
+			throw new InvalidCritterException(critter_class_name);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		List<Critter> result = new java.util.ArrayList<Critter>();
-		
+		for(Critter crit : population) {
+			if(c.isInstance(crit)) {
+				result.add(crit);
+			}
+		}
 		return result;
 	}
 	
