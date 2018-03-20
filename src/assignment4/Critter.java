@@ -50,32 +50,31 @@ public abstract class Critter {
 	private int x_coord;
 	private int y_coord;
 	
-	/* Unknown purpose
+	//Create the 2D torus of the game map (wrap to the other side at the edge)
 	private final int travelX(int distanceToTravel) {
-		//boundary condition
-			if(this.x_coord+distanceToTravel>Params.world_width-1) {
-				return Params.world_width-1;
-			}else if(this.x_coord+distanceToTravel<0) {
-				return 1;
-			}
-			else {
-				return this.x_coord+distanceToTravel;
-			}
-			
+		if(this.x_coord + distanceToTravel > Params.world_width - 1) {
+			return Params.world_width - 1;
+		}
+		else if(this.x_coord + distanceToTravel < 0) {
+			return 1;
+		}
+		else {
+			return this.x_coord + distanceToTravel;
+		}
 	}
 		
 	private final int travelY(int distanceToTravel) {
-			//boundary condition
-			if(this.y_coord+distanceToTravel>Params.world_height-1) {
-				return Params.world_height-1;
-			}else if(this.y_coord+distanceToTravel<0) {
-				return 1;
-			}
-			else {
-				return this.y_coord+distanceToTravel;
-			}	
+		if(this.y_coord + distanceToTravel > Params.world_height - 1) {
+			return Params.world_height - 1;
+		}
+		else if(this.y_coord+distanceToTravel < 0) {
+			return 1;
+		}
+		else {
+			return this.y_coord + distanceToTravel;
+		}	
 	}
-	*/
+	
 	
 	protected final void walk(int direction) {
 		// implement this method
