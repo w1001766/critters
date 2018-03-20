@@ -6,7 +6,11 @@ package assignment4;
 import assignment4.Critter.TestCritter;
 
 public class Algae extends TestCritter {
-
+	/*
+	public Algae() {
+		// implement the default constructor
+	}
+	*/
 	public String toString() { return "@"; }
 	
 	public boolean fight(String not_used) { return false; }

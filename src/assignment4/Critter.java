@@ -12,7 +12,7 @@ package assignment4;
  * Spring 2018
  */
 
-
+import java.lang.reflect.Constructor;
 import java.util.List;
 
 /* see the PDF for descriptions of the methods and fields in this class
@@ -52,17 +52,17 @@ public abstract class Critter {
 	
 	//Create the 2D torus of the game map (wrap to the other side at the edge)
 	private final int travelX(int distanceToTravel) {
-		if(this.x_coord + distanceToTravel > Params.world_width - 1) {
+		if(x_coord + distanceToTravel > Params.world_width - 1) {
 			return Params.world_width - 1;
 		}
-		else if(this.x_coord + distanceToTravel < 0) {
+		else if(x_coord + distanceToTravel < 0) {
 			return 1;
 		}
 		else {
-			return this.x_coord + distanceToTravel;
+			return x_coord + distanceToTravel;
 		}
 	}
-		
+
 	private final int travelY(int distanceToTravel) {
 		if(this.y_coord + distanceToTravel > Params.world_height - 1) {
 			return Params.world_height - 1;
@@ -77,11 +77,69 @@ public abstract class Critter {
 	
 	
 	protected final void walk(int direction) {
-		// implement this method
+		switch (direction) {
+		case 0: 
+			x_coord = travelX(1);
+			break;	// if this case is true, then don't check the rest of the cases
+		case 1:
+			x_coord = travelX(1);
+			y_coord = travelY(-1);
+			break;
+		case 2:
+			y_coord = travelY(-1);
+			break;
+		case 3:
+			x_coord = travelX(-1);
+			y_coord = travelY(-1);
+			break;
+		case 4:
+			x_coord = travelX(-1);
+			break;
+		case 5:
+			x_coord = travelX(-1);
+			y_coord = travelY(1);
+			break;
+		case 6:
+			y_coord = travelY(1);
+			break;
+		default:
+			x_coord = travelX(1);
+			y_coord = travelY(1);
+			break;
+		}
 	}
 	
 	protected final void run(int direction) {
-		// implement this method
+		switch (direction) {
+		case 0: 
+			x_coord = travelX(2);
+			break;	// if this case is true, then don't check the rest of the cases
+		case 1:
+			x_coord = travelX(2);
+			y_coord = travelY(-2);
+			break;
+		case 2:
+			y_coord = travelY(-2);
+			break;
+		case 3:
+			x_coord = travelX(-2);
+			y_coord = travelY(-2);
+			break;
+		case 4:
+			x_coord = travelX(-2);
+			break;
+		case 5:
+			x_coord = travelX(-2);
+			y_coord = travelY(2);
+			break;
+		case 6:
+			y_coord = travelY(2);
+			break;
+		default:
+			x_coord = travelX(2);
+			y_coord = travelY(2);
+			break;
+		}
 	}
 	
 	protected final void reproduce(Critter offspring, int direction) {
@@ -102,8 +160,32 @@ public abstract class Critter {
 	 * @throws InvalidCritterException
 	 */
 	public static void makeCritter(String critter_class_name) throws InvalidCritterException {
-		// implement this method
-		// try catch 
+		try {
+			Class<?> c = Class.forName(critter_class_name);
+			Constructor<?> cons = c.getConstructor();
+			// create a critter based on the given critter_class_name
+			Critter cr = (Critter) cons.newInstance();
+			// initialize the position and energy for the critters
+			cr.x_coord = Critter.getRandomInt(Params.world_width);
+			cr.y_coord = Critter.getRandomInt(Params.world_height);
+			cr.energy = Params.start_energy;
+			population.add(cr);
+		}
+		catch (ClassNotFoundException e) {
+			throw new InvalidCritterException(critter_class_name);
+		}
+		catch (IllegalAccessException e) {
+			throw new InvalidCritterException(critter_class_name);
+		}
+		catch (InstantiationException e) {
+			throw new InvalidCritterException(critter_class_name);
+		} 
+		catch (IllegalArgumentException e) {
+			throw new InvalidCritterException(critter_class_name);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -116,7 +198,7 @@ public abstract class Critter {
 		// implement this method
 		// try catch 
 		List<Critter> result = new java.util.ArrayList<Critter>();
-	
+		
 		return result;
 	}
 	
@@ -201,22 +283,141 @@ public abstract class Critter {
 	 */
 	public static void clearWorld() {
 		// implement this method
+		population.clear();
 	}
 	
-	/*	Helper function written by Wenxuan
-	public boolean AliveOrNot() {
+	/**
+	 * This method worldTimeStep will proceed one time-step
+	 * Update the position of all the critters
+	 * If two or more critters occupy the same location, then make them fight
+	 * After the conflicts are resolved, critters will reproduce  
+	 * Remove all the critters with energy <= zero
+	 * New Algae are added to the world map 
+	 */
+	public static void worldTimeStep() {
+		for(Critter c: population) {		// invoke doTimeStep method on every living critter in the critter collection
+			c.doTimeStep();
+		}
+		for(Critter i: population) {
+			for(Critter j:population) {
+				if(!i.equals(j)) {
+					//encounter
+					if(!babies.contains(i) && !babies.contains(j)) {//new born babies cannot fight
+						if(i.x_coord == j.x_coord && i.y_coord == j.y_coord) {
+							if(i.isAlive()==true && j.isAlive() ==true) {
+								int iPower = 0; int jPower =0;		//the amount of energy each critter will use to battle (random)
+								if(i.fight(j.toString())==true) {	//if i wants to fight
+									iPower = getRandomInt(i.energy);
+								}
+								if(j.fight(i.toString())==true) {	// if j wants to fight as well
+									jPower = getRandomInt(j.energy);
+								}
+								
+								if(iPower>jPower) {
+									i.energy += 1/2 *(j.energy); 
+									j.energy = 0;	// this critter is dead
+								}
+								else if(jPower> iPower) {
+									j.energy += 1/2 *(i.energy);
+									i.energy = 0; 	// this critter is dead
+								}
+								else {
+									//decide the winner using flipping a coin. 1 means i win, 0 means j win
+									int coinflip = getRandomInt(2);
+									if(coinflip==1) {
+										i.energy += 1/2 *(j.energy); 
+										j.energy = 0;	// this critter is dead
+									}
+									else {
+										j.energy += 1/2 *(j.energy); 
+										i.energy = 0;	// this critter is dead
+									}
+								}
+							}
+						}
+					}
+					
+				}
+				
+			}
+		}
+		// add all the babies in
+		for(Critter b: babies) {
+			if(b.energy>0) {
+				population.add(b);
+			}
+		}
+		// all critters
+		for(Critter c: population) {
+			c.energy -= Params.rest_energy_cost;
+		}
+		// clear all the dead critters
+		List<Critter> deadCritters = new java.util.ArrayList<Critter>();
+		for(Critter c: population) {
+			if(c.energy<=0) {
+				deadCritters.add(c);
+			}
+		}
+		for(Critter c: deadCritters) {
+			population.remove(c);
+		}
+		//create algae
+		for(int i=0;i<Params.refresh_algae_count;i++) {
+				try {
+					Critter.makeCritter("assignment4.Algae");		// call the default constructor of algea 
+				} catch (SecurityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvalidCritterException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+	}
+
+	/**
+	 * This method displayWorld prints out a 2D grid to System.out
+	 * If a position is occupied, call the toString method on the occupant critter
+	 * If a position is not occupied, then print a single space
+	 * This method also prints the border using "|" "-" "+"
+	 */
+	public static void displayWorld() {
+		String[][] world = new String[Params.world_height][Params.world_width];
+		// all the corners
+		world[0][0] = "+";
+		world[0][Params.world_width+1] = "+";
+		world[Params.world_height+1][0] = "+";
+		world[Params.world_height+1][Params.world_width+1] = "+";
+		//all the "-"
+		for(int i=1;i<Params.world_width+1;i++) {
+			world[0][i] = "-";
+			world[Params.world_height+1][i] = "-";
+		}
+		
+		//all the "|"
+		for(int i = 1;i<Params.world_height+1;i++) {
+			world[i][0] = "|";
+			world[i][Params.world_width+1] = "|";
+		}
+		//all the Critters
+		for(Critter c: population) {
+			world[c.x_coord+1][c.y_coord+1] = c.toString();
+			
+		}
+		for (int i = 0; i < Params.world_height+2; i += 1) {
+			for (int j = 0; j < Params.world_width+2; j += 1) {
+				System.out.print(world[i][j]);
+			}
+			System.out.println();
+		}
+	}
+	
+	//----------------Helper Functions---------------------
+	public boolean isAlive() {
 		if(this.energy>0) {
 			return true;
 		}
 		return false;
 	}
-	*/
 	
-	public static void worldTimeStep() {
-		// implement this method
-	}
-	
-	public static void displayWorld() {
-		// implement this method
-	}
 }
